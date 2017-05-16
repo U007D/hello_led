@@ -3,7 +3,7 @@
 #![warn(missing_debug_implementations, missing_copy_implementations, trivial_casts, trivial_numeric_casts, unused_import_braces, unused_qualifications)]
 #![allow(non_camel_case_types)]
 
-extern crate NewRustProject;
+extern crate hello_led;
 mod consts;
 use consts::msgs;
 
@@ -17,7 +17,7 @@ pub fn main()
         _ => msgs::UNKNOWN_APP_NAME.to_string(),
     };
 
-    match NewRustProject::lib_main(args)
+    match hello_led::lib_main(args)
     {
         Err(e) => panic!(format!("{}: {}: {}", app_name, msgs::ERROR, e.description())),
         _ => (),
