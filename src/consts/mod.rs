@@ -3,7 +3,7 @@ pub use self::msgs::*;
 
 //TODO: Use dependency injection instead of conditional compilation
 #[cfg(not(test))]
-pub const MEMORY_MAP_DEVICE_FILENAME_VALUE: &'static str = "/dev/mmap";
+pub const MEMORY_MAP_DEVICE_FILENAME_VALUE: &'static str = "/dev/mem";
 #[cfg(test)]
 pub const MEMORY_MAP_DEVICE_FILENAME_VALUE: &'static str = "./fake_mmap_file.test";
 

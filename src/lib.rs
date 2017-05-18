@@ -7,7 +7,7 @@ extern crate memmap;
 extern crate owning_ref;
 
 type GeneralError = Box<std::error::Error>;
-type GeneralResult<T> = std::result::Result<T, GeneralError>;
+type GeneralResult<T> = Result<T, GeneralError>;
 
 mod consts;
 use consts::*;
@@ -19,7 +19,6 @@ use std::fs::OpenOptions;
 mod unit_tests;
 
 pub fn lib_main(_args: Vec<String>) -> GeneralResult<()> {
-    println!("MMDFV: {}", MEMORY_MAP_DEVICE_FILENAME_VALUE);
     let mmap = map_gpio()?;
     let gpio = &*mmap;
     println!("GPIO has been set up");
@@ -31,7 +30,7 @@ pub fn lib_main(_args: Vec<String>) -> GeneralResult<()> {
 fn map_gpio() -> GeneralResult<OwningRef<Box<Mmap>, [u8]>> {
     let fd = OpenOptions::new().read(true)
                                .write(true)
-                               .open(MEMORY_MAP_DEVICE_FILENAME)?;
+                               .open(consts::MEMORY_MAP_DEVICE_FILENAME)?;
     let gpio_map = OwningRef::new(Box::new(Mmap::open_with_offset(&fd, Protection::ReadWrite,
                                                                   GPIO_BASE,
                                                                   GPIO_SIZE)?));

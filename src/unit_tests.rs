@@ -7,11 +7,13 @@ use std::io::Write;
 #[test]
 fn empty_test() {}
 
-struct ScopedFile {
+struct ScopedFile
+{
     uri: PathBuf,
 }
 
-impl ScopedFile {
+impl ScopedFile
+{
     pub fn new(fq_filename: PathBuf) -> GeneralResult<ScopedFile> {
         ScopedFile::from_string(fq_filename, "")
     }
@@ -27,14 +29,16 @@ impl ScopedFile {
     }
 }
 
-impl Drop for ScopedFile {
+impl Drop for ScopedFile
+{
     fn drop(&mut self) {
         let _ = fs::remove_file(&self.uri);
     }
 }
 
 #[test]
-fn calling_lib_main_succeeds() {
+fn calling_lib_main_succeeds()
+{
     let fh = ScopedFile::new(PathBuf::from(MEMORY_MAP_DEVICE_FILENAME_VALUE));
     let result = lib_main(Vec::<String>::new());
     println!("lib_main() result: {:?}", result);
