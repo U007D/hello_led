@@ -6,7 +6,7 @@
 
 extern crate memmap;
 extern crate byteorder;
-extern crate num;
+//extern crate num;
 
 type GeneralError = Box<std::error::Error>;
 type GeneralResult<T> = Result<T, GeneralError>;
@@ -15,9 +15,7 @@ mod consts;
 use consts::*;
 use memmap::{Mmap, Protection};
 use std::fs::OpenOptions;
-use std::ptr;
-use byteorder::{ByteOrder, LittleEndian, ReadBytesExt, WriteBytesExt};
-use std::io::Write;
+use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 
 #[cfg(test)]
 mod unit_tests;
@@ -38,15 +36,14 @@ pub fn lib_main(_args: Vec<String>) -> GeneralResult<()> {
     gpio.write(gpfsel0, register | 0b1 << 15)?;
     println!("GPIO5 set as output");
 
-    //flush?  hope not
-
     //toggle
     let gplev0 = 0x34;
-    println!("GPIO5: {}", gpio.read(gplev0)? & 0b1 << 5 >> 5);
+    let gplev_gpio5_mask = 0b1 << 5;
+    println!("GPIO5: {}", (gpio.read(gplev0)? & gplev_gpio5_mask) >> 5);
     let gpset = 0x1c;
     gpio.write(gpset, 0b1 << 5)?;
     println!("GPIO5 enabled");
-    println!("GPIO5: {}", gpio.read(gplev0)? & 0b1 << 5 >> 5);
+    println!("GPIO5: {}", (gpio.read(gplev0)? & gplev_gpio5_mask) >> 5);
 
     Ok(())
 }
