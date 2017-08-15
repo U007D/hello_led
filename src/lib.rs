@@ -3,6 +3,7 @@
 #![allow(non_camel_case_types)]
 #![warn(missing_debug_implementations, missing_copy_implementations, trivial_casts, trivial_numeric_casts, unused_import_braces, unused_qualifications)]
 #![deny(unused_must_use, overflowing_literals)]
+#![feature(never_type)]
 
 extern crate memmap;
 extern crate byteorder;
@@ -20,7 +21,7 @@ use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 #[cfg(test)]
 mod unit_tests;
 
-pub fn lib_main(_args: Vec<String>) -> GeneralResult<()> {
+pub fn lib_main(_args: Vec<String>) -> GeneralResult<!> {
 
     //Set up GPIO
     let mut gpio = Mapping::new(GPIO_BASE, GPIO_SIZE)?;
@@ -45,7 +46,14 @@ pub fn lib_main(_args: Vec<String>) -> GeneralResult<()> {
     println!("GPIO5 enabled");
     println!("GPIO5: {}", (gpio.read(gplev0)? & gplev_gpio5_mask) >> 5);
 
-    Ok(())
+    //toggle
+    loop {
+        gpio.write(gpset, 0b1 << 5)?;
+        for _ in 0..1_000_000 {}
+
+        gpio.write(gpclr, 0b1 << 5)?;
+        for _ in 0..1_000_000 {}
+    }
 }
 
 struct Mapping {
